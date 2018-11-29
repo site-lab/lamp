@@ -18,7 +18,7 @@ wgetがない場合は **yum -y install wget** でインストールしてくだ
 
 **sh /home/ユーザー名/ファイル名.sh** ユーザー階層にある場合（rootユーザー実行時）
 
-## [apache_php72_mariadb103.sh](https://github.com/site-lab/db/blob/master/mariadb102.sh)
+## [apache_php72_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mariadb103.sh)
 Apache2.4+PHP7.2+MariaDB10.3をインストールします。
 自動起動もOnとなります
 有効機能
