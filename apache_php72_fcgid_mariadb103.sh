@@ -519,6 +519,13 @@ echo '<?php phpinfo(); ?>' >> /var/www/html/info.php
 cat /var/www/html/info.php
 end_message
 
+# ディレクトリ作成
+echo "mkdir /var/log/mysql"
+start_message
+mkdir /var/log/mysql
+end_message
+
+
 #mariaDBのインストール
 start_message
 echo "MariaDB10.3系をインストールします"
@@ -536,6 +543,76 @@ yum -y install mariadb-server maradb-client
 yum list installed | grep mariadb
 
 end_message
+
+#ファイル作成
+start_message
+rm -rf /etc/etc/my.cnf.d/server.cnf
+cat >/etc/etc/my.cnf.d/server.cnf <<'EOF'
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+[mysqld]
+
+#
+# * Galera-related settings
+#
+
+#エラーログ
+log_error="/var/log/mysql/mysqld.log"
+log_warnings=1
+
+#  Query log
+general_log = ON
+general_log_file="/var/log/mysql/sql.log"
+
+#  Slow Query log
+slow_query_log=1
+slow_query_log_file="/var/log/mysql/slow.log"
+log_queries_not_using_indexes
+log_slow_admin_statements
+long_query_time=5
+character-set-server = utf8
+
+
+[galera]
+# Mandatory settings
+#wsrep_on=ON
+#wsrep_provider=
+#wsrep_cluster_address=
+#binlog_format=row
+#default_storage_engine=InnoDB
+#innodb_autoinc_lock_mode=2
+#
+# Allow server to accept connections on all interfaces.
+#
+#bind-address=0.0.0.0
+#
+# Optional setting
+#wsrep_slave_threads=1
+#innodb_flush_log_at_trx_commit=0
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+[mariadb]
+
+# This group is only read by MariaDB-10.3 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.3]
+EOF
+
 
 #バージョン表示
 start_message
