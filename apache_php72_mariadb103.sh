@@ -522,8 +522,8 @@ end_message
 
 #ファイル作成
 start_message
-rm -rf /etc/etc/my.cnf.d/server.cnf
-cat >/etc/etc/my.cnf.d/server.cnf <<'EOF'
+rm -rf /etc/my.cnf.d/server.cnf
+cat >/etc/my.cnf.d/server.cnf <<'EOF'
 #
 # These groups are read by MariaDB server.
 # Use it for options that only the server (but not clients) should see
