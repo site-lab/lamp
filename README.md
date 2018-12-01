@@ -27,4 +27,15 @@ Apache2.4+PHP7.2+MariaDB10.3をインストールします。
 * gzip圧縮の設定
 * SSL
 
-となります。
+となります。PHP7は **モジュール版** となります
+
+## [apache_php72_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_fcgid_mariadb103.sh)
+Apache2.4+PHP7.2+MariaDB10.3をインストールします。
+自動起動もOnとなります
+有効機能
+* HTTP2
+* firewallのポート許可(80番、443番)
+* gzip圧縮の設定
+* SSL
+
+となります。PHP7は **FastCGI版** となります。
