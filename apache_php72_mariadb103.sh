@@ -432,6 +432,10 @@ AddDefaultCharset UTF-8
 #EnableMMAP off
 EnableSendfile on
 
+#バージョン非表示
+ServerTokens ProductOnly
+ServerSignature off
+
 # Supplemental configuration
 #
 # Load config files in the "/etc/httpd/conf.d" directory, if any.
