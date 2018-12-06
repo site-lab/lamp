@@ -44,7 +44,20 @@ Apache2.4+PHP7.2+MariaDB10.3をインストールします。
 
 
 ## [apache_php72_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mysql57.sh)
-Apache2.4+PHP7.2+MariaDB5.7をインストールします。
+Apache2.4+PHP7.2+MySQL5.7をインストールします。
+自動起動もOnとなります
+有効機能
+* HTTP2
+* firewallのポート許可(80番、443番)
+* gzip圧縮の設定
+* SSL
+* スロークエリ有効化
+* デフォルトパスワード有効期限無効
+
+となります。PHP7は **モジュール版** となります
+
+## [apache_php72_mysql80.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mysql80.sh)
+Apache2.4+PHP7.2+MySQL8.0をインストールします。
 自動起動もOnとなります
 有効機能
 * HTTP2
