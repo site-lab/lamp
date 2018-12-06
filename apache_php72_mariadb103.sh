@@ -720,4 +720,4 @@ https://www.logw.jp/server/8359.html
 
 EOF
 
-echo "centosユーザーのパスワードは"${PASSWORD}"です。。"
+echo "centosユーザーのパスワードは"${PASSWORD}"です。"
