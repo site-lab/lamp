@@ -713,4 +713,11 @@ https://www.logw.jp/server/8359.html
 
 
 これにて終了です
+
+ドキュメントルートの所有者：centos
+グループ：apache
+になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+
 EOF
+
+echo "centosユーザーのパスワードは"${PASSWORD}"です。"
