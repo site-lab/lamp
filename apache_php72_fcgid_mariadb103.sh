@@ -625,6 +625,29 @@ start_message
 mysql --version
 end_message
 
+#ユーザー作成
+start_message
+echo "centosユーザーを作成します"
+USERNAME='centos'
+PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
+
+useradd -m -G apache -s /bin/bash "${USERNAME}"
+echo "${PASSWORD}" | passwd --stdin "${USERNAME}"
+echo "パスワードは"${PASSWORD}"です。"
+
+#所属グループ表示
+echo "所属グループを表示します"
+getent group apache
+end_message
+
+#所有者の変更
+start_message
+echo "ドキュメントルートの所有者をcentos、グループをapacheにします"
+chown "-R centos:apache /var/www/html"
+chown -R centos:apache /var/www/html
+end_message
+
+
 
 # apacheの起動
 echo "apacheを起動します"
@@ -665,6 +688,8 @@ echo "設定を表示"
 echo ""
 firewall-cmd --list-all
 end_message
+
+umask 0002
 
 cat <<EOF
 http://IPアドレス/info.php
@@ -709,6 +734,13 @@ https://www.logw.jp/server/8359.html
 
 </VirtualHost>
 
+ドキュメントルートの所有者：centos
+グループ：apache
+になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+
 
 これにて終了です
 EOF
+
+echo "centosユーザーのパスワードは"${PASSWORD}"です。"
+exec $SHELL -l

@@ -721,3 +721,4 @@ https://www.logw.jp/server/8359.html
 EOF
 
 echo "centosユーザーのパスワードは"${PASSWORD}"です。"
+exec $SHELL -l
