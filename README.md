@@ -4,12 +4,12 @@ LAMP環境を構築します
 ※自己責任で実行してください
 
 ## テスト環境
-* conohaのVPS
+### conohaのVPS
 * メモリ：512MB
 * CPU：1コア
 * SSD：20GB
 
-* さくらののVPS
+### さくらののVPS
 * メモリ：512MB
 * CPU：1コア
 * SSD：20GB
@@ -46,6 +46,19 @@ Apache2.4+PHP7.2+MariaDB10.3をインストールします。
 * スロークエリ有効化
 
 となります。PHP7は **FastCGI版** となります。
+
+## [apache_php73_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php73_fcgid_mariadb103.sh)
+Apache2.4+PHP7.3+MariaDB10.3をインストールします。
+自動起動もOnとなります
+有効機能
+* HTTP2
+* firewallのポート許可(80番、443番)
+* gzip圧縮の設定
+* SSL
+* スロークエリ有効化
+
+となります。PHP7は **FastCGI版** となります。
+
 
 
 ## [apache_php72_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mysql57.sh)
