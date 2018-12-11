@@ -501,7 +501,7 @@ EOF
 echo "phpをインストールします"
 echo ""
 start_message
-yum -y install --enablerepo=remi,remi-php72 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql
+yum -y install --enablerepo=remi,remi-php72 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
 echo "phpのバージョン確認"
 echo ""
 php -v
@@ -569,6 +569,80 @@ slow_query_log_file=/var/log/mysql-slow.log
 long_query_time=0.01
 EOF
 end_message
+
+#phpmyadminのファイル修正
+cat >/etc/httpd/conf.d/phpMyAdmin.conf <<'EOF'
+# phpMyAdmin - Web based MySQL browser written in php
+#
+# Allows only localhost by default
+#
+# But allowing phpMyAdmin to anyone other than localhost should be considered
+# dangerous unless properly secured by SSL
+
+Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
+
+<Directory /usr/share/phpMyAdmin/>
+   AddDefaultCharset UTF-8
+
+   <IfModule mod_authz_core.c>
+     # Apache 2.4
+     Require all granted
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+     # Apache 2.2
+     Order Deny,Allow
+     Deny from All
+     Allow from 127.0.0.1
+     Allow from ::1
+   </IfModule>
+</Directory>
+
+<Directory /usr/share/phpMyAdmin/setup/>
+   <IfModule mod_authz_core.c>
+     # Apache 2.4
+     Require all granted
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+     # Apache 2.2
+     Order Deny,Allow
+     Deny from All
+     Allow from 127.0.0.1
+     Allow from ::1
+   </IfModule>
+</Directory>
+
+# These directories do not require access over HTTP - taken from the original
+# phpMyAdmin upstream tarball
+#
+<Directory /usr/share/phpMyAdmin/libraries/>
+    Order Deny,Allow
+    Deny from All
+    Allow from None
+</Directory>
+
+<Directory /usr/share/phpMyAdmin/setup/lib/>
+    Order Deny,Allow
+    Deny from All
+    Allow from None
+</Directory>
+
+<Directory /usr/share/phpMyAdmin/setup/frames/>
+    Order Deny,Allow
+    Deny from All
+    Allow from None
+</Directory>
+
+# This configuration prevents mod_security at phpMyAdmin directories from
+# filtering SQL etc.  This may break your mod_security implementation.
+#
+#<IfModule mod_security.c>
+#    <Directory /usr/share/phpMyAdmin/>
+#        SecRuleInheritance Off
+#    </Directory>
+#</IfModule>
+EOF
+
 
 # phpinfoの作成
 start_message
@@ -703,6 +777,60 @@ MySQLのポリシーではパスワードは
 MySQL 5.7 からユーザーのパスワードの有効期限がデフォルトで360日になりました。 360日するとパスワードの変更を促されてログインできなくなります。
 ・slow queryはデフォルトでONとなっています
 ・秒数は0.01秒となります
+MySQL初期設定は以下の通りです
+[root@ ~]# mysql_secure_installation
+
+Securing the MySQL server deployment.
+
+Enter password for user root:
+
+The existing password for the user account root has expired. Please set a new password.
+
+New password:"初期パスワードを入れる"
+
+Re-enter new password:"初期パスワードを入れる"
+
+Estimated strength of the password: 100
+Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : y
+By default, a MySQL installation has an anonymous user,
+allowing anyone to log into MySQL without having to have
+a user account created for them. This is intended only for
+testing, and to make the installation go a bit smoother.
+You should remove them before moving into a production
+environment.
+
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+
+Normally, root should only be allowed to connect from
+'localhost'. This ensures that someone cannot guess at
+the root password from the network.
+
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+By default, MySQL comes with a database named 'test' that
+anyone can access. This is also intended only for testing,
+and should be removed before moving into a production
+environment.
+
+
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+ - Dropping test database...
+Success.
+
+ - Removing privileges on test database...
+Success.
+
+Reloading the privilege tables will ensure that all changes
+made so far will take effect immediately.
+
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+Success.
+
+All done!
+
 ---------------------------------------------
 
 ドキュメントルートの所有者：centos
