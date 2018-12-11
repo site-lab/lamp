@@ -792,6 +792,11 @@ https://www.logw.jp/server/8359.html
 グループ：apache
 になっているため、ユーザー名とグループの変更が必要な場合は変更してください
 
+-----------------
+phpmyadmin
+http://Iアドレス/phpmyadmin/
+※パスワードなしログインは禁止となっています。rootのパスワード設定してからログインしてください
+-----------------
 EOF
 
 echo "centosユーザーのパスワードは"${PASSWORD}"です。"
