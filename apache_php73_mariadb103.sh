@@ -694,7 +694,7 @@ end_message
 #所有者の変更
 start_message
 echo "ドキュメントルートの所有者をcentos、グループをapacheにします"
-chown "-R centos:apache /var/www/html"
+echo "-R centos:apache /var/www/html"
 chown -R centos:apache /var/www/html
 end_message
 
