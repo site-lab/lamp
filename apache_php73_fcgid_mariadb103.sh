@@ -502,7 +502,7 @@ EOF
 echo "phpをインストールします"
 echo ""
 start_message
-yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
+yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql
 echo "phpのバージョン確認"
 echo ""
 php -v
@@ -618,80 +618,6 @@ character-set-server = utf8
 # use this group for options that older servers don't understand
 [mariadb-10.3]
 EOF
-
-#phpmyadminのファイル修正
-cat >/etc/httpd/conf.d/phpMyAdmin.conf <<'EOF'
-# phpMyAdmin - Web based MySQL browser written in php
-#
-# Allows only localhost by default
-#
-# But allowing phpMyAdmin to anyone other than localhost should be considered
-# dangerous unless properly secured by SSL
-
-Alias /phpMyAdmin /usr/share/phpMyAdmin
-Alias /phpmyadmin /usr/share/phpMyAdmin
-
-<Directory /usr/share/phpMyAdmin/>
-   AddDefaultCharset UTF-8
-
-   <IfModule mod_authz_core.c>
-     # Apache 2.4
-     Require all granted
-   </IfModule>
-   <IfModule !mod_authz_core.c>
-     # Apache 2.2
-     Order Deny,Allow
-     Deny from All
-     Allow from 127.0.0.1
-     Allow from ::1
-   </IfModule>
-</Directory>
-
-<Directory /usr/share/phpMyAdmin/setup/>
-   <IfModule mod_authz_core.c>
-     # Apache 2.4
-     Require all granted
-   </IfModule>
-   <IfModule !mod_authz_core.c>
-     # Apache 2.2
-     Order Deny,Allow
-     Deny from All
-     Allow from 127.0.0.1
-     Allow from ::1
-   </IfModule>
-</Directory>
-
-# These directories do not require access over HTTP - taken from the original
-# phpMyAdmin upstream tarball
-#
-<Directory /usr/share/phpMyAdmin/libraries/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
-</Directory>
-
-<Directory /usr/share/phpMyAdmin/setup/lib/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
-</Directory>
-
-<Directory /usr/share/phpMyAdmin/setup/frames/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
-</Directory>
-
-# This configuration prevents mod_security at phpMyAdmin directories from
-# filtering SQL etc.  This may break your mod_security implementation.
-#
-#<IfModule mod_security.c>
-#    <Directory /usr/share/phpMyAdmin/>
-#        SecRuleInheritance Off
-#    </Directory>
-#</IfModule>
-EOF
-
 
 
 #バージョン表示
@@ -811,14 +737,6 @@ https://www.logw.jp/server/8359.html
 ドキュメントルートの所有者：centos
 グループ：apache
 になっているため、ユーザー名とグループの変更が必要な場合は変更してください
-
-
------------------
-phpmyadmin
-http://Iアドレス/phpmyadmin/
-※パスワードなしログインは禁止となっています。rootのパスワード設定してからログインしてください
------------------
-
 EOF
 
 echo "centosユーザーのパスワードは"${PASSWORD}"です。"
