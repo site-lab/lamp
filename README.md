@@ -23,66 +23,49 @@ wgetがない場合は **yum -y install wget** でインストールしてくだ
 
 **sh /home/ユーザー名/ファイル名.sh** ユーザー階層にある場合（rootユーザー実行時）
 
-## [apache_php72_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mariadb103.sh)
-Apache2.4+PHP7.2+MariaDB10.3をインストールします。
-自動起動もOnとなります
-有効機能
-* HTTP2
+## 共通内容
+* epelインストール
+* gitのインストール
+* システム更新
+* mod_sslのインストール
+* HTTP2の有効化
 * firewallのポート許可(80番、443番)
 * gzip圧縮の設定
-* SSL
+* centosユーザーの作成
 * スロークエリ有効化
 
-となります。PHP7は **モジュール版** となります
+
+## [apache_php72_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mariadb103.sh)
+Apache2.4+PHP7.2+MariaDB10.3をインストールします。
+PHP7は **モジュール版** となります
 
 ## [apache_php72_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_fcgid_mariadb103.sh)
 Apache2.4+PHP7.2+MariaDB10.3をインストールします。
-自動起動もOnとなります
-有効機能
-* HTTP2
-* firewallのポート許可(80番、443番)
-* gzip圧縮の設定
-* SSL
-* スロークエリ有効化
-
-となります。PHP7は **FastCGI版** となります。
+PHP7は **FastCGI版** となります。
 
 ## [apache_php73_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php73_fcgid_mariadb103.sh)
 Apache2.4+PHP7.3+MariaDB10.3をインストールします。
-自動起動もOnとなります
-有効機能
-* HTTP2
-* firewallのポート許可(80番、443番)
-* gzip圧縮の設定
-* SSL
-* スロークエリ有効化
-
-となります。PHP7は **FastCGI版** となります。
+PHP7は **FastCGI版** となります。
 
 
 
 ## [apache_php72_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mysql57.sh)
 Apache2.4+PHP7.2+MySQL5.7をインストールします。
-自動起動もOnとなります
-有効機能
-* HTTP2
-* firewallのポート許可(80番、443番)
-* gzip圧縮の設定
-* SSL
-* スロークエリ有効化
 * デフォルトパスワード有効期限無効
 
-となります。PHP7は **モジュール版** となります
+PHP7は **モジュール版** となります
+
+## [apache_php73_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache_php73_mysql57.sh)
+Apache2.4+PHP7.3+MySQL5.7をインストールします。
+* デフォルトパスワード有効期限無効
+
+PHP7は **モジュール版** となります
+
 
 ## [apache_php72_mysql80.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_mysql80.sh)
 Apache2.4+PHP7.2+MySQL8.0をインストールします。
 自動起動もOnとなります
 有効機能
-* HTTP2
-* firewallのポート許可(80番、443番)
-* gzip圧縮の設定
-* SSL
-* スロークエリ有効化
 * デフォルトパスワード有効期限無効
 
-となります。PHP7は **モジュール版** となります
+PHP7は **モジュール版** となります
