@@ -642,6 +642,15 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
 #</IfModule>
 EOF
 
+#php.iniの設定変更
+start_message
+echo "phpのバージョンを非表示にします"
+echo "sed -i -e s|expose_php = On|expose_php = Off| /etc/php.ini"
+sed -i -e "s|expose_php = On|expose_php = Off|" /etc/php.ini
+echo "phpのタイムゾーンを変更"
+echo "sed -i -e s|;date.timezone =|date.timezone = Asia/Tokyo| /etc/php.ini"
+sed -i -e "s|;date.timezone =|date.timezone = Asia/Tokyo|" /etc/php.ini
+end_message
 
 
 # phpinfoの作成
