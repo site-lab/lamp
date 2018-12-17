@@ -18,9 +18,6 @@ URL：https://www.logw.jp/
 
 COMMENT
 
-echo "インストールスクリプトを開始します"
-echo "このスクリプトのインストール対象はCentOS7です。"
-echo ""
 
 start_message(){
 echo ""
@@ -33,65 +30,71 @@ echo ""
 echo "======================完了======================"
 echo ""
 }
+#CentOS7か確認
+if [ -e /etc/redhat-release ]; then
+    DIST="redhat"
+    DIST_VER=`cat /etc/redhat-release | sed -e "s/.*\s\([0-9]\)\..*/\1/"`
 
-#EPELリポジトリのインストール
-start_message
-yum remove -y epel-release
-yum -y install epel-release
-end_message
+    if [ $DIST = "redhat" ];then
+      if [ $DIST_VER = "7" ];then
+        #EPELリポジトリのインストール
+        start_message
+        yum remove -y epel-release
+        yum -y install epel-release
+        end_message
 
-#Remiリポジトリのインストール
-start_message
-yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-end_message
-
-
-#gitリポジトリのインストール
-start_message
-yum -y install git
-end_message
-
-#MariaDBを削除
-start_message
-echo "MariaDBを削除します"
-echo ""
-yum -y remove mariadb-libs
-rm -rf /var/lib/mysql/
-end_message
-
-#公式リポジトリの追加
-start_message
-yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
-yum info mysql-community-server
-end_message
+        #Remiリポジトリのインストール
+        start_message
+        yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+        end_message
 
 
+        #gitリポジトリのインストール
+        start_message
+        yum -y install git
+        end_message
 
-# yum updateを実行
-echo "yum updateを実行します"
-echo ""
+        #MariaDBを削除
+        start_message
+        echo "MariaDBを削除します"
+        echo ""
+        yum -y remove mariadb-libs
+        rm -rf /var/lib/mysql/
+        end_message
 
-start_message
-yum -y update
-end_message
+        #公式リポジトリの追加
+        start_message
+        yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+        yum info mysql-community-server
+        end_message
 
-# apacheのインストール
-echo "apacheをインストールします"
-echo ""
 
-start_message
-yum -y install httpd
-yum -y install openldap-devel expat-devel
-yum -y install httpd-devel mod_ssl
 
-echo "ファイルのバックアップ"
-echo ""
-mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
+        # yum updateを実行
+        echo "yum updateを実行します"
+        echo ""
 
-echo "htaccess有効化した状態のconfファイルを作成します"
-echo ""
+        start_message
+        yum -y update
+        end_message
 
-cat >/etc/httpd/conf/httpd.conf <<'EOF'
+        # apacheのインストール
+        echo "apacheをインストールします"
+        echo ""
+
+        start_message
+        yum -y install httpd
+        yum -y install openldap-devel expat-devel
+        yum -y install httpd-devel mod_ssl
+
+        echo "ファイルのバックアップ"
+        echo ""
+        mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
+
+        echo "htaccess有効化した状態のconfファイルを作成します"
+        echo ""
+
+        cat >/etc/httpd/conf/httpd.conf <<'EOF'
 #
 # This is the main Apache HTTP server configuration file.  It contains the
 # configuration directives that give the server its instructions.
@@ -452,12 +455,12 @@ IncludeOptional conf.d/*.conf
 
 EOF
 
-#SSLの設定変更（http2を有効化）
-echo "ファイルのバックアップ"
-echo ""
-mv /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
+        #SSLの設定変更（http2を有効化）
+        echo "ファイルのバックアップ"
+        echo ""
+        mv /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
 
-cat >/etc/httpd/conf.modules.d/00-mpm.conf <<'EOF'
+        cat >/etc/httpd/conf.modules.d/00-mpm.conf <<'EOF'
 # Select the MPM module which should be used by uncommenting exactly
 # one of the following LoadModule lines:
 
@@ -479,14 +482,14 @@ LoadModule mpm_event_module modules/mod_mpm_event.so
 EOF
 
 
-ls /etc/httpd/conf/
-echo "Apacheのバージョン確認"
-echo ""
-httpd -v
-echo ""
-end_message
+        ls /etc/httpd/conf/
+        echo "Apacheのバージョン確認"
+        echo ""
+        httpd -v
+        echo ""
+        end_message
 
-#gzip圧縮の設定
+        #gzip圧縮の設定
 cat >/etc/httpd/conf.d/gzip.conf <<'EOF'
 SetOutputFilter DEFLATE
 BrowserMatch ^Mozilla/4 gzip-only-text/html
@@ -497,40 +500,40 @@ Header append Vary User-Agent env=!dont-var
 EOF
 
 
-# php7系のインストール
-echo "phpをインストールします"
-echo ""
-start_message
-yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
-echo "phpのバージョン確認"
-echo ""
-php -v
-echo ""
-end_message
+        # php7系のインストール
+        echo "phpをインストールします"
+        echo ""
+        start_message
+        yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
+        echo "phpのバージョン確認"
+        echo ""
+        php -v
+        echo ""
+        end_message
 
-#MySQLのインストール
-start_message
-echo "MySQLのインストール"
-echo ""
-yum -y install mysql-community-server
-yum list installed | grep mysql
-end_message
+        #MySQLのインストール
+        start_message
+        echo "MySQLのインストール"
+        echo ""
+        yum -y install mysql-community-server
+        yum list installed | grep mysql
+        end_message
 
-#バージョン確認
-start_message
-echo "MySQLのバージョン確認"
-echo ""
-mysql --version
-end_message
+        #バージョン確認
+        start_message
+        echo "MySQLのバージョン確認"
+        echo ""
+        mysql --version
+        end_message
 
-#my.cnfの設定を変える
-start_message
-echo "ファイル名をリネーム"
-echo "/etc/my.cnf.default"
-mv /etc/my.cnf /etc/my.cnf.default
+        #my.cnfの設定を変える
+        start_message
+        echo "ファイル名をリネーム"
+        echo "/etc/my.cnf.default"
+        mv /etc/my.cnf /etc/my.cnf.default
 
-echo "新規ファイルを作成してパスワードを無制限使用に変える"
-cat <<EOF >/etc/my.cnf
+        echo "新規ファイルを作成してパスワードを無制限使用に変える"
+        cat <<EOF >/etc/my.cnf
 # For advice on how to change settings please see
 # http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
 
@@ -567,10 +570,10 @@ slow_query_log=ON
 slow_query_log_file=/var/log/mysql-slow.log
 long_query_time=0.01
 EOF
-end_message
+        end_message
 
-#phpmyadminのファイル修正
-cat >/etc/httpd/conf.d/phpMyAdmin.conf <<'EOF'
+        #phpmyadminのファイル修正
+        cat >/etc/httpd/conf.d/phpMyAdmin.conf <<'EOF'
 # phpMyAdmin - Web based MySQL browser written in php
 #
 # Allows only localhost by default
@@ -642,216 +645,228 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
 #</IfModule>
 EOF
 
-#php.iniの設定変更
-start_message
-echo "phpのバージョンを非表示にします"
-echo "sed -i -e s|expose_php = On|expose_php = Off| /etc/php.ini"
-sed -i -e "s|expose_php = On|expose_php = Off|" /etc/php.ini
-echo "phpのタイムゾーンを変更"
-echo "sed -i -e s|;date.timezone =|date.timezone = Asia/Tokyo| /etc/php.ini"
-sed -i -e "s|;date.timezone =|date.timezone = Asia/Tokyo|" /etc/php.ini
-end_message
+        #php.iniの設定変更
+        start_message
+        echo "phpのバージョンを非表示にします"
+        echo "sed -i -e s|expose_php = On|expose_php = Off| /etc/php.ini"
+        sed -i -e "s|expose_php = On|expose_php = Off|" /etc/php.ini
+        echo "phpのタイムゾーンを変更"
+        echo "sed -i -e s|;date.timezone =|date.timezone = Asia/Tokyo| /etc/php.ini"
+        sed -i -e "s|;date.timezone =|date.timezone = Asia/Tokyo|" /etc/php.ini
+        end_message
 
 
-# phpinfoの作成
-start_message
-touch /var/www/html/info.php
-echo '<?php phpinfo(); ?>' >> /var/www/html/info.php
-cat /var/www/html/info.php
-end_message
+        # phpinfoの作成
+        start_message
+        touch /var/www/html/info.php
+        echo '<?php phpinfo(); ?>' >> /var/www/html/info.php
+        cat /var/www/html/info.php
+        end_message
 
-#ユーザー作成
-start_message
-echo "centosユーザーを作成します"
-USERNAME='centos'
-PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
+        #ユーザー作成
+        start_message
+        echo "centosユーザーを作成します"
+        USERNAME='centos'
+        PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
 
-useradd -m -G apache -s /bin/bash "${USERNAME}"
-echo "${PASSWORD}" | passwd --stdin "${USERNAME}"
-echo "パスワードは"${PASSWORD}"です。"
+        useradd -m -G apache -s /bin/bash "${USERNAME}"
+        echo "${PASSWORD}" | passwd --stdin "${USERNAME}"
+        echo "パスワードは"${PASSWORD}"です。"
 
-#所属グループ表示
-echo "所属グループを表示します"
-getent group apache
-end_message
+        #所属グループ表示
+        echo "所属グループを表示します"
+        getent group apache
+        end_message
 
-#所有者の変更
-start_message
-echo "ドキュメントルートの所有者をcentos、グループをapacheにします"
-chown -R centos:apache /var/www/html
-end_message
-
-
-# apacheの起動
-echo "apacheを起動します"
-start_message
-systemctl start httpd.service
-echo "apacheのステータス確認"
-systemctl status httpd.service
-
-echo "MySQLの起動"
-echo ""
-systemctl start mysqld.service
-systemctl status mysqld.service
-end_message
-
-#自動起動の設定
-start_message
-systemctl enable httpd
-systemctl enable mysqld.service
-
-systemctl list-unit-files --type=service | grep httpd
-systemctl list-unit-files --type=service | grep mysqld
-end_message
+        #所有者の変更
+        start_message
+        echo "ドキュメントルートの所有者をcentos、グループをapacheにします"
+        chown -R centos:apache /var/www/html
+        end_message
 
 
-#firewallのポート許可
-echo "http(80番)とhttps(443番)の許可をしてます"
-start_message
-firewall-cmd --permanent --add-service=http
-firewall-cmd --permanent --add-service=https
-echo ""
-echo "保存して有効化"
-echo ""
-firewall-cmd --reload
+        # apacheの起動
+        echo "apacheを起動します"
+        start_message
+        systemctl start httpd.service
+        echo "apacheのステータス確認"
+        systemctl status httpd.service
 
-echo ""
-echo "設定を表示"
-echo ""
-firewall-cmd --list-all
-end_message
+        echo "MySQLの起動"
+        echo ""
+        systemctl start mysqld.service
+        systemctl status mysqld.service
+        end_message
 
-umask 0002
+        #自動起動の設定
+        start_message
+        systemctl enable httpd
+        systemctl enable mysqld.service
 
-cat <<EOF
-http://IPアドレス/info.php
-https://IPアドレス/info.php
-で確認してみてください
-
-ドキュメントルート(DR)は
-/var/www/html
-となります。
-
-htaccessはドキュメントルートのみ有効化しています
-
-有効化の確認
-
-https://www.logw.jp/server/7452.html
-vi /var/www/html/.htaccess
------------------
-AuthType Basic
-AuthName hoge
-Require valid-user
------------------
-
-ダイアログがでればhtaccessが有効かされた状態となります。
-
-●HTTP2について
-SSLのconfファイルに｢Protocols h2 http/1.1｣と追記してください
-https://www.logw.jp/server/8359.html
-
-例）
-<VirtualHost *:443>
-    ServerName logw.jp
-    ServerAlias www.logw.jp
-
-    Protocols h2 http/1.1　←追加
-    DocumentRoot /var/www/html
+        systemctl list-unit-files --type=service | grep httpd
+        systemctl list-unit-files --type=service | grep mysqld
+        end_message
 
 
-<Directory /var/www/html/>
-    AllowOverride All
-    Require all granted
-</Directory>
+        #firewallのポート許可
+        echo "http(80番)とhttps(443番)の許可をしてます"
+        start_message
+        firewall-cmd --permanent --add-service=http
+        firewall-cmd --permanent --add-service=https
+        echo ""
+        echo "保存して有効化"
+        echo ""
+        firewall-cmd --reload
 
-</VirtualHost>
+        echo ""
+        echo "設定を表示"
+        echo ""
+        firewall-cmd --list-all
+        end_message
 
+        umask 0002
 
-これにて終了です
+        cat <<EOF
+        http://IPアドレス/info.php
+        https://IPアドレス/info.php
+        で確認してみてください
 
-ドキュメントルートの所有者：グループは｢root｣になっているため、ユーザー名とグループを変更してください
+        ドキュメントルート(DR)は
+        /var/www/html
+        となります。
 
----------------------------------------------
-MySQLについて
-rootのパスワードは
-cat /var/log/mysqld.log
-[Note] A temporary password is generated for root@localhost:"ここにパスワードが記述されている"
----------------------------------------------
-となります。パスワードの変更は絶対行ってください
-MySQLのポリシーではパスワードは
-"8文字以上＋大文字小文字＋数値＋記号"
-でないといけないみたいです
+        htaccessはドキュメントルートのみ有効化しています
 
----------------------------------------------
-MySQL 5.7 からユーザーのパスワードの有効期限がデフォルトで360日になりました。 360日するとパスワードの変更を促されてログインできなくなります。
-・slow queryはデフォルトでONとなっています
-・秒数は0.01秒となります
-MySQL初期設定は以下の通りです
-[root@ ~]# mysql_secure_installation
+        有効化の確認
 
-Securing the MySQL server deployment.
+        https://www.logw.jp/server/7452.html
+        vi /var/www/html/.htaccess
+        -----------------
+        AuthType Basic
+        AuthName hoge
+        Require valid-user
+        -----------------
 
-Enter password for user root:
+        ダイアログがでればhtaccessが有効かされた状態となります。
 
-The existing password for the user account root has expired. Please set a new password.
+        ●HTTP2について
+        SSLのconfファイルに｢Protocols h2 http/1.1｣と追記してください
+        https://www.logw.jp/server/8359.html
 
-New password:"初期パスワードを入れる"
+        例）
+        <VirtualHost *:443>
+            ServerName logw.jp
+            ServerAlias www.logw.jp
 
-Re-enter new password:"初期パスワードを入れる"
-
-Estimated strength of the password: 100
-Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : y
-By default, a MySQL installation has an anonymous user,
-allowing anyone to log into MySQL without having to have
-a user account created for them. This is intended only for
-testing, and to make the installation go a bit smoother.
-You should remove them before moving into a production
-environment.
-
-Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-
-Normally, root should only be allowed to connect from
-'localhost'. This ensures that someone cannot guess at
-the root password from the network.
-
-Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-By default, MySQL comes with a database named 'test' that
-anyone can access. This is also intended only for testing,
-and should be removed before moving into a production
-environment.
+            Protocols h2 http/1.1　←追加
+            DocumentRoot /var/www/html
 
 
-Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
- - Dropping test database...
-Success.
+        <Directory /var/www/html/>
+            AllowOverride All
+            Require all granted
+        </Directory>
 
- - Removing privileges on test database...
-Success.
+        </VirtualHost>
 
-Reloading the privilege tables will ensure that all changes
-made so far will take effect immediately.
 
-Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
-Success.
+        これにて終了です
 
-All done!
+        ドキュメントルートの所有者：グループは｢root｣になっているため、ユーザー名とグループを変更してください
 
----------------------------------------------
+        ---------------------------------------------
+        MySQLについて
+        rootのパスワードは
+        cat /var/log/mysqld.log
+        [Note] A temporary password is generated for root@localhost:"ここにパスワードが記述されている"
+        ---------------------------------------------
+        となります。パスワードの変更は絶対行ってください
+        MySQLのポリシーではパスワードは
+        "8文字以上＋大文字小文字＋数値＋記号"
+        でないといけないみたいです
 
-ドキュメントルートの所有者：centos
-グループ：apache
-になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+        ---------------------------------------------
+        MySQL 5.7 からユーザーのパスワードの有効期限がデフォルトで360日になりました。 360日するとパスワードの変更を促されてログインできなくなります。
+        ・slow queryはデフォルトでONとなっています
+        ・秒数は0.01秒となります
+        MySQL初期設定は以下の通りです
+        [root@ ~]# mysql_secure_installation
 
------------------
-phpmyadmin
-http://Iアドレス/phpmyadmin/
-※パスワードなしログインは禁止となっています。rootのパスワード設定してからログインしてください
------------------
+        Securing the MySQL server deployment.
+
+        Enter password for user root:
+
+        The existing password for the user account root has expired. Please set a new password.
+
+        New password:"初期パスワードを入れる"
+
+        Re-enter new password:"初期パスワードを入れる"
+
+        Estimated strength of the password: 100
+        Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : y
+        By default, a MySQL installation has an anonymous user,
+        allowing anyone to log into MySQL without having to have
+        a user account created for them. This is intended only for
+        testing, and to make the installation go a bit smoother.
+        You should remove them before moving into a production
+        environment.
+
+        Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+        Success.
+
+
+        Normally, root should only be allowed to connect from
+        'localhost'. This ensures that someone cannot guess at
+        the root password from the network.
+
+        Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+        Success.
+
+        By default, MySQL comes with a database named 'test' that
+        anyone can access. This is also intended only for testing,
+        and should be removed before moving into a production
+        environment.
+
+
+        Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+         - Dropping test database...
+        Success.
+
+         - Removing privileges on test database...
+        Success.
+
+        Reloading the privilege tables will ensure that all changes
+        made so far will take effect immediately.
+
+        Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+        Success.
+
+        All done!
+
+        ---------------------------------------------
+
+        ドキュメントルートの所有者：centos
+        グループ：apache
+        になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+
+        -----------------
+        phpmyadmin
+        http://Iアドレス/phpmyadmin/
+        ※パスワードなしログインは禁止となっています。rootのパスワード設定してからログインしてください
+        -----------------
 EOF
 
-echo "centosユーザーのパスワードは"${PASSWORD}"です。"
+        echo "centosユーザーのパスワードは"${PASSWORD}"です。"
+      else
+        echo "CentOS7ではないため、このスクリプトは使えません。このスクリプトのインストール対象はCentOS7です。"
+      fi
+    fi
+
+else
+  echo "このスクリプトのインストール対象はCentOS7です。CentOS7以外は動きません。"
+  cat <<EOF
+  検証LinuxディストリビューションはDebian・Ubuntu・Fedora・Arch Linux（アーチ・リナックス）となります。
+EOF
+fi
+
 exec $SHELL -l
