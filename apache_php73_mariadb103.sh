@@ -452,29 +452,10 @@ EOF
         #SSLの設定変更（http2を有効化）
         echo "ファイルのバックアップ"
         echo ""
-        mv /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
+        cp /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
 
-        cat >/etc/httpd/conf.modules.d/00-mpm.conf <<'EOF'
-# Select the MPM module which should be used by uncommenting exactly
-# one of the following LoadModule lines:
-
-# prefork MPM: Implements a non-threaded, pre-forking web server
-# See: http://httpd.apache.org/docs/2.4/mod/prefork.html
-#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
-
-# worker MPM: Multi-Processing Module implementing a hybrid
-# multi-threaded multi-process web server
-# See: http://httpd.apache.org/docs/2.4/mod/worker.html
-#
-#LoadModule mpm_worker_module modules/mod_mpm_worker.so
-
-# event MPM: A variant of the worker MPM with the goal of consuming
-# threads only for connections with active processing
-# See: http://httpd.apache.org/docs/2.4/mod/event.html
-#
-LoadModule mpm_event_module modules/mod_mpm_event.so
-EOF
-
+        sed -i -e "s|LoadModule mpm_prefork_module modules/mod_mpm_prefork.so|#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so|" /etc/httpd/conf.modules.d/00-mpm.conf
+        sed -i -e "s|#LoadModule mpm_event_module modules/mod_mpm_event.so|LoadModule mpm_event_module modules/mod_mpm_event.so|" /etc/httpd/conf.modules.d/00-mpm.conf
 
         ls /etc/httpd/conf/
         echo "Apacheのバージョン確認"
