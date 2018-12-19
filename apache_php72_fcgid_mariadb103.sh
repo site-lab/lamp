@@ -412,7 +412,7 @@ LogLevel warn
 # in HTML content to override this choice, comment out this
 # directive:
 #
-AddDefaultCharset UTF-8
+#AddDefaultCharset UTF-8
 
 <IfModule mime_magic_module>
     #

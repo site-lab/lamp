@@ -238,7 +238,7 @@ DocumentRoot "/var/www/html"
     # http://httpd.apache.org/docs/2.4/mod/core.html#options
     # for more information.
     #
-    Options Indexes FollowSymLinks
+    Options FollowSymLinks
 
     #
     # AllowOverride controls what directives may be placed in .htaccess files.
@@ -410,7 +410,7 @@ LogLevel warn
 # in HTML content to override this choice, comment out this
 # directive:
 #
-AddDefaultCharset UTF-8
+#AddDefaultCharset UTF-8
 
 <IfModule mime_magic_module>
     #
