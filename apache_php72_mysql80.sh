@@ -652,6 +652,11 @@ EOF
         echo "centosユーザーを作成します"
         USERNAME='centos'
         PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
+        #DBrootユーザーのパスワード
+        RPASSWORD=$(more /dev/urandom  | tr -dc '12345678abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ,.+\-\!' | fold -w 12 | grep -i [12345678] | grep -i '[,.+\-\!]' | head -n 1)
+        #DBuser(centos)パスワード
+        UPASSWORD=$(more /dev/urandom  | tr -dc '12345678abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ,.+\-\!' | fold -w 12 | grep -i [12345678] | grep -i '[,.+\-\!]' | head -n 1)
+
 
         useradd -m -G apache -s /bin/bash "${USERNAME}"
         echo "${PASSWORD}" | passwd --stdin "${USERNAME}"
@@ -689,6 +694,43 @@ EOF
 
         systemctl list-unit-files --type=service | grep httpd
         systemctl list-unit-files --type=service | grep mysqld
+        end_message
+
+        #パスワード設定
+        start_message
+        DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
+        #sed -i -e "s|#password =|password = '${DB_PASSWORD}'|" /etc/my.cnf
+        mysql -u root -p${DB_PASSWORD} --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${RPASSWORD}'; flush privileges;"
+        echo ${RPASSWORD}
+
+cat <<EOF >/etc/createdb.sql
+CREATE DATABASE centos;
+CREATE USER 'centos'@'localhost' IDENTIFIED BY '${UPASSWORD}';
+GRANT ALL PRIVILEGES ON centos.* TO 'centos'@'localhost';
+FLUSH PRIVILEGES;
+SELECT user, host FROM mysql.user;
+EOF
+mysql -u root -p${RPASSWORD}  -e "source /etc/createdb.sql"
+
+        end_message
+
+        #ファイルを保存
+        cat <<EOF >/etc/my.cnf.d/centos.cnf
+[client]
+user = centos
+password = ${UPASSWORD}
+host = localhost
+EOF
+
+        systemctl restart mysqld.service
+
+        #ファイルの保存
+        start_message
+        echo "パスワードなどを保存"
+        cat <<EOF >/root/pass.txt
+root = ${RPASSWORD}
+centos = ${UPASSWORD}
+EOF
         end_message
 
 
@@ -760,81 +802,34 @@ EOF
 
         ---------------------------------------------
         MySQLについて
-        rootのパスワードは
-        cat /var/log/mysqld.log
-        [Note] A temporary password is generated for root@localhost:"ここにパスワードが記述されている"
-        ---------------------------------------------
-        となります。パスワードの変更は絶対行ってください
         MySQLのポリシーではパスワードは
         "8文字以上＋大文字小文字＋数値＋記号"
         でないといけないみたいです
-
-        ---------------------------------------------
-        MySQL 5.7 からユーザーのパスワードの有効期限がデフォルトで360日になりました。 360日するとパスワードの変更を促されてログインできなくなります。
-        ・slow queryはデフォルトでONとなっています
-        ・秒数は0.01秒となります
-        MySQL初期設定は以下の通りです
-        [root@ ~]# mysql_secure_installation
-
-        Securing the MySQL server deployment.
-
-        Enter password for user root:
-
-        The existing password for the user account root has expired. Please set a new password.
-
-        New password:"初期パスワードを入れる"
-
-        Re-enter new password:"初期パスワードを入れる"
-
-        Estimated strength of the password: 100
-        Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : y
-        By default, a MySQL installation has an anonymous user,
-        allowing anyone to log into MySQL without having to have
-        a user account created for them. This is intended only for
-        testing, and to make the installation go a bit smoother.
-        You should remove them before moving into a production
-        environment.
-
-        Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
-        Success.
-
-
-        Normally, root should only be allowed to connect from
-        'localhost'. This ensures that someone cannot guess at
-        the root password from the network.
-
-        Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
-        Success.
-
-        By default, MySQL comes with a database named 'test' that
-        anyone can access. This is also intended only for testing,
-        and should be removed before moving into a production
-        environment.
-
-
-        Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
-         - Dropping test database...
-        Success.
-
-         - Removing privileges on test database...
-        Success.
-
-        Reloading the privilege tables will ensure that all changes
-        made so far will take effect immediately.
-
-        Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
-        Success.
-
-        All done!
-
         ---------------------------------------------
 
         ドキュメントルートの所有者：centos
         グループ：apache
         になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+
+        -----------------
+        phpmyadmin
+        http://Iアドレス/phpmyadmin/
+        ※パスワードなしログインは禁止となっています。rootのパスワード設定してからログインしてください
+        -----------------
+        MySQLへのログイン方法
+        centosユーザーでログインするには下記コマンドを実行してください
+        mysql --defaults-extra-file=/etc/my.cnf.d/centos.cnf
+        ---------------------------------------------
+        ・slow queryはデフォルトでONとなっています
+        ・秒数は0.01秒となります
+        ・/root/pass.txtにパスワードが保存されています
+        ---------------------------------------------
 EOF
 
         echo "centosユーザーのパスワードは"${PASSWORD}"です。"
+        echo "データベースのrootユーザーのパスワードは"${RPASSWORD}"です。"
+        echo "データベースのcentosユーザーのパスワードは"${UPASSWORD}"です。"
+
       else
         echo "CentOS7ではないため、このスクリプトは使えません。このスクリプトのインストール対象はCentOS7です。"
       fi
