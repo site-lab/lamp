@@ -544,9 +544,11 @@ EOF
 # default-authentication-plugin=mysql_native_password
 
 datadir=/var/lib/mysql
+log-error=/var/log/mysqld.log
 socket=/var/lib/mysql/mysql.sock
 
-character-set-server = utf8
+character-set-server = utf8mb4
+collation-server = utf8mb4_bin
 default_password_lifetime = 0
 
 #slowクエリの設定
