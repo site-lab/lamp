@@ -782,6 +782,11 @@ EOF
         MySQLへのログイン方法
         centosユーザーでログインするには下記コマンドを実行してください
         mysql --defaults-extra-file=/etc/my.cnf.d/centos.cnf
+        -----------------
+        ・slow queryはデフォルトでONとなっています
+        ・秒数は0.01秒となります
+        ・/root/pass.txtにパスワードが保存されています
+
 
 
 
