@@ -551,6 +551,9 @@ character-set-server = utf8mb4
 collation-server = utf8mb4_bin
 default_password_lifetime = 0
 
+#旧式のログインに変更
+default_authentication_plugin=mysql_native_password
+
 #slowクエリの設定
 slow_query_log=ON
 slow_query_log_file=/var/log/mysql-slow.log
@@ -730,6 +733,9 @@ EOF
         start_message
         echo "パスワードなどを保存"
         cat <<EOF >/root/pass.txt
+ユーザー
+centos = ${PASSWORD}
+データベース
 root = ${RPASSWORD}
 centos = ${UPASSWORD}
 EOF
