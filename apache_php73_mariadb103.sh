@@ -449,7 +449,7 @@ IncludeOptional conf.d/*.conf
 
 EOF
 
-        #SSLの設定変更（http2を有効化）
+        #SSLの設定変更
         echo "ファイルのバックアップ"
         echo ""
         cp /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
@@ -806,27 +806,7 @@ EOF
         ダイアログがでればhtaccessが有効かされた状態となります。
 
         ●HTTP2について
-        SSLのconfファイルに｢Protocols h2 http/1.1｣と追記してください
-        https://www.logw.jp/server/8359.html
-
-        例）
-        <VirtualHost *:443>
-            ServerName logw.jp
-            ServerAlias www.logw.jp
-
-            Protocols h2 http/1.1　←追加
-            DocumentRoot /var/www/html
-
-
-        <Directory /var/www/html/>
-            AllowOverride All
-            Require all granted
-        </Directory>
-
-        </VirtualHost>
-
-
-        これにて終了です
+        このApacheはHTTP/2に非対応となります。ApacheでHTTP2を使う場合は2.4.17以降が必要となります。
 
         ドキュメントルートの所有者：centos
         グループ：apache

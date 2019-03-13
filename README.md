@@ -33,7 +33,6 @@ wgetがない場合は **yum -y install wget** でインストールしてくだ
 * gitのインストール
 * システム更新
 * mod_sslのインストール
-* HTTP2の有効化
 * firewallのポート許可(80番、443番)
 * gzip圧縮の設定
 * centosユーザーの作成
