@@ -1,7 +1,10 @@
 # LAMP
 CentOS7専用となります。**centos7 minimal インストール** した状態で何もはいっていない状態で必要なファイルを実行してください
-LAMP環境を構築します
+LAMP環境を構築します。HTTP2対応バージョンもあります。
 ※自己責任で実行してください
+
+##HTTP2の確認方法
+インストール後、**# find / -name mod_http2.so** といれてください。**/usr/lib64/httpd/modules/mod_http2.so** とでてきたら、HTTP2に対応しているバージョンとなります。
 
 ## テスト環境
 ### conohaのVPS
@@ -72,4 +75,8 @@ Apache2.4+PHP7.2+MySQL8.0をインストールします。
 有効機能
 * デフォルトパスワード有効期限無効
 
+PHP7は **モジュール版** となります
+
+## [apache24u_php72_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache24_php72_mariadb103.sh)
+Apache2.4.x+PHP7.2+MariaDB10.3をインストールします。
 PHP7は **モジュール版** となります
