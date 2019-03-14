@@ -3,11 +3,9 @@ CentOS7専用となります。**centos7 minimal インストール** した状�
 LAMP環境を構築します。HTTP2対応バージョンもあります。
 ※自己責任で実行してください
 
-<<<<<<< HEAD
+
 ## HTTP2の確認方法
-=======
-##HTTP2の確認方法
->>>>>>> d72e5c676f1c1e66cf5ed7d218f544e63d274407
+
 インストール後、**# find / -name mod_http2.so** といれてください。**/usr/lib64/httpd/modules/mod_http2.so** とでてきたら、HTTP2に対応しているバージョンとなります。
 
 ## テスト環境
