@@ -82,3 +82,9 @@ PHP7は **モジュール版** となります
 ## [apache24u_php72_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache24_php72_mariadb103.sh)
 Apache2.4.x+PHP7.2+MariaDB10.3をインストールします。
 PHP7は **モジュール版** となります
+
+## [apache24u_php72_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache24u_php72_mysql57.sh)
+Apache2.4+PHP7.2+MySQL5.7をインストールします。
+* デフォルトパスワード有効期限無効
+
+PHP7は **モジュール版** となります
