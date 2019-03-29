@@ -88,3 +88,9 @@ Apache2.4+PHP7.2+MySQL5.7をインストールします。
 * デフォルトパスワード有効期限無効
 
 PHP7は **モジュール版** となります
+
+## [apache24u_php73_mysql57.sh](https://github.com/site-lab/lamp/blob/master/apache24u_php73_mysql57.sh)
+Apache2.4.x+PHP7.3+MySQL5.7をインストールします。
+* デフォルトパスワード有効期限無効
+
+PHP7は **モジュール版** となります
