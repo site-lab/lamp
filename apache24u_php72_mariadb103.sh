@@ -50,6 +50,7 @@ if [ -e /etc/redhat-release ]; then
         yum remove -y epel-release
         yum -y install epel-release
         end_message
+        
         #IUSリポジトリのインストール
         start_message
         echo "IUSリポジトリをインストールします"
