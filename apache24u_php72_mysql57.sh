@@ -508,7 +508,7 @@ ServerSignature off
 IncludeOptional conf.d/*.conf
 EOF
 
-        #SSLの設定変更
+        #SSLの設定変更（http2を有効化）
         echo "ファイルのバックアップ"
         echo ""
         cp /etc/httpd/conf.modules.d/00-mpm.conf /etc/httpd/conf.modules.d/00-mpm.conf.bk
