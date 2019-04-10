@@ -9,8 +9,8 @@ URL：https://www.logw.jp/
 
 注意点：conohaのポートは全て許可前提となります。もしくは80番、443番の許可をしておいてください。システムのfirewallはオン状態となります。centosユーザーのパスワードはランダム生成となります。最後に表示されます
 
-目的：システム更新+apache2.4.6+php7+MySQL5.7のインストール
-・apache2.4
+目的：システム更新+apache2.4.x+php7+MySQL5.7のインストール
+・apache2.4.x
 ・mod_sslのインストール
 ・PHP7系のインストール
 ・MySQLのインストール
