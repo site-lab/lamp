@@ -827,7 +827,24 @@ EOF
         ダイアログがでればhtaccessが有効かされた状態となります。
 
         ●HTTP2について
-        このApacheはHTTP/2に非対応となります。ApacheでHTTP2を使う場合は2.4.17以降が必要となります。
+        SSLのconfファイルに｢Protocols h2 http/1.1｣と追記してください
+        https://www.logw.jp/server/8359.html
+
+        例）
+        <VirtualHost *:443>
+            ServerName logw.jp
+            ServerAlias www.logw.jp
+
+            Protocols h2 http/1.1　←追加
+            DocumentRoot /var/www/html
+
+
+        <Directory /var/www/html/>
+            AllowOverride All
+            Require all granted
+        </Directory>
+
+        </VirtualHost>
 
         ドキュメントルートの所有者：グループは｢root｣になっているため、ユーザー名とグループを変更してください
 
