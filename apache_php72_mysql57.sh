@@ -87,7 +87,7 @@ if [ -e /etc/redhat-release ]; then
         start_message
         yum -y install httpd
         yum -y install openldap-devel expat-devel
-        yum -y install httpd-devel mod_ssl
+        #yum -y install httpd-devel mod_ssl
 
         echo "ファイルのバックアップ"
         echo ""
@@ -514,6 +514,7 @@ EOF
         echo "ファイル名をリネーム"
         echo "/etc/my.cnf.default"
         mv /etc/my.cnf /etc/my.cnf.default
+        mkdir /var/log/mysql/
 
         echo "新規ファイルを作成してパスワードを無制限使用に変える"
         cat <<EOF >/etc/my.cnf
