@@ -87,7 +87,7 @@ if [ -e /etc/redhat-release ]; then
         start_message
         yum -y install httpd
         yum -y install openldap-devel expat-devel
-        #yum -y install httpd-devel mod_ssl
+        yum -y install httpd-devel mod_ssl
 
         echo "ファイルのバックアップ"
         echo ""
