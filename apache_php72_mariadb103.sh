@@ -523,8 +523,9 @@ EOF
 
         end_message
 
-        #ファイル作成
+        #ディレクトリとファイル作成
         start_message
+        mkdir /var/log/mysql/
         rm -rf /etc/my.cnf.d/server.cnf
         cat >/etc/my.cnf.d/server.cnf <<'EOF'
 #
