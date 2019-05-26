@@ -494,6 +494,13 @@ EOF
         echo ""
         end_message
 
+        # ディレクトリ作成
+        echo "mkdir /var/log/mysql"
+        start_message
+        mkdir /var/log/mysql
+        end_message
+
+
         #MySQLのインストール
         start_message
         echo "MySQLのインストール"

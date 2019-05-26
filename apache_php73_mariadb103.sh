@@ -505,6 +505,13 @@ EOF
         cat /var/www/html/info.php
         end_message
 
+        # ディレクトリ作成
+        echo "mkdir /var/log/mysql"
+        start_message
+        mkdir /var/log/mysql
+        end_message
+
+
         #mariaDBのインストール
         start_message
         echo "MariaDB10.3系をインストールします"
