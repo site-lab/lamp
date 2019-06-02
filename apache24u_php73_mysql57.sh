@@ -137,9 +137,9 @@ EOF
         echo ""
 
         start_message
-        yum -y --enablerepo=ius install httpd24u
+        yum -y --enablerepo=ius install httpd24u --nogpgcheck
         yum -y install openldap-devel expat-devel
-        yum -y --enablerepo=ius install httpd24u-devel httpd24u-mod_ssl
+        yum -y --enablerepo=ius install httpd24u-devel httpd24u-mod_ssl --nogpgcheck
 
         echo "ファイルのバックアップ"
         echo ""
@@ -545,6 +545,13 @@ EOF
         php -v
         echo ""
         end_message
+
+        # ディレクトリ作成
+        echo "mkdir /var/log/mysql"
+        start_message
+        mkdir /var/log/mysql
+        end_message
+
 
         #MySQLのインストール
         start_message
