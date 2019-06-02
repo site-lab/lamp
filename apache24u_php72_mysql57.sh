@@ -56,27 +56,31 @@ if [ -e /etc/redhat-release ]; then
         echo "IUSリポジトリをデフォルトから外します"
         cat >/etc/yum.repos.d/ius.repo <<'EOF'
 [ius]
+name = IUS for Enterprise Linux 7 - $basearch
+baseurl = https://repo.ius.io/7/$basearch/
+enabled = 0
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+
+[ius-debuginfo]
+name = IUS for Enterprise Linux 7 - $basearch - Debug
+baseurl = https://repo.ius.io/7/$basearch/debug/
+enabled = 0
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+
+[ius-source]
+name = IUS for Enterprise Linux 7 - Source
+baseurl = https://repo.ius.io/7/src/
+enabled = 0
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
 name=IUS Community Packages for Enterprise Linux 7 - $basearch
 #baseurl=https://dl.iuscommunity.org/pub/ius/stable/CentOS/7/$basearch
 mirrorlist=https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos7&arch=$basearch&protocol=http
-failovermethod=priority
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
-
-[ius-debuginfo]
-name=IUS Community Packages for Enterprise Linux 7 - $basearch - Debug
-#baseurl=https://dl.iuscommunity.org/pub/ius/stable/CentOS/7/$basearch/debuginfo
-mirrorlist=https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos7-debuginfo&arch=$basearch&protocol=http
-failovermethod=priority
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
-
-[ius-source]
-name=IUS Community Packages for Enterprise Linux 7 - $basearch - Source
-#baseurl=https://dl.iuscommunity.org/pub/ius/stable/CentOS/7/SRPMS
-mirrorlist=https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos7-source&arch=source&protocol=http
 failovermethod=priority
 enabled=0
 gpgcheck=1
