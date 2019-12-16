@@ -257,6 +257,21 @@ EOF
     break
   elif [ $selection = "MySQL5.7" ]; then
     # MySQL5.7のインストール
+
+    #MariaDBを削除
+    start_message
+    echo "MariaDBを削除します"
+    echo ""
+    yum -y remove mariadb-libs
+    rm -rf /var/lib/mysql/
+    end_message
+
+    #公式リポジトリの追加
+    start_message
+    yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+    yum info mysql-community-server
+    end_message
+
     # ディレクトリ作成
     echo "mkdir /var/log/mysql"
     start_message
@@ -327,6 +342,20 @@ EOF
 
   elif [ $selection = "MySQL8" ]; then
     # MySQL8のインストール
+    #MariaDBを削除
+    start_message
+    echo "MariaDBを削除します"
+    echo ""
+    yum -y remove mariadb-libs
+    rm -rf /var/lib/mysql/
+    end_message
+
+    #公式リポジトリの追加
+    start_message
+    rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+    yum info mysql-community-server
+    end_message
+
     # ディレクトリ作成
     echo "mkdir /var/log/mysql"
     start_message
