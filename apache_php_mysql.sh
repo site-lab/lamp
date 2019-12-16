@@ -156,106 +156,11 @@ done
 
 #DBの選択
 PS4="インストールしたいデータベースのバージョンを指定してください > "
-DB_LIST="MariaDB10.3 MySQL5.7 MySQL8"
+DB_LIST="MySQL5.7 MySQL8"
 
 select selection in $DB_LIST
 do
-  if [ $selection = "MariaDB10.3" ]; then
-    # MariaDB10.3のインストール
-    # ディレクトリ作成
-    echo "mkdir /var/log/mysql"
-    start_message
-    mkdir /var/log/mysql
-    end_message
-
-    #mariaDBのインストール
-    start_message
-    echo "MariaDB10.3系をインストールします"
-    cat >/etc/yum.repos.d/MariaDB.repo <<'EOF'
-# MariaDB 10.3 CentOS repository list
-# http://mariadb.org/mariadb/repositories/
-[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.3/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-EOF
-
-    yum -y install mariadb-server maradb-client
-    yum list installed | grep mariadb
-
-    end_message
-
-    #ファイル作成
-    start_message
-    rm -rf /etc/my.cnf.d/server.cnf
-    cat >/etc/my.cnf.d/server.cnf <<'EOF'
-#
-# These groups are read by MariaDB server.
-# Use it for options that only the server (but not clients) should see
-#
-# See the examples of server my.cnf files in /usr/share/mysql/
-#
-
-# this is read by the standalone daemon and embedded servers
-[server]
-
-# this is only for the mysqld standalone daemon
-[mysqld]
-
-#
-# * Galera-related settings
-#
-
-#エラーログ
-log_error="/var/log/mysql/mysqld.log"
-log_warnings=1
-
-#  Query log
-general_log = ON
-general_log_file="/var/log/mysql/sql.log"
-
-#  Slow Query log
-slow_query_log=1
-slow_query_log_file="/var/log/mysql/slow.log"
-log_queries_not_using_indexes
-log_slow_admin_statements
-long_query_time=5
-character-set-server = utf8
-
-
-[galera]
-# Mandatory settings
-#wsrep_on=ON
-#wsrep_provider=
-#wsrep_cluster_address=
-#binlog_format=row
-#default_storage_engine=InnoDB
-#innodb_autoinc_lock_mode=2
-#
-# Allow server to accept connections on all interfaces.
-#
-#bind-address=0.0.0.0
-#
-# Optional setting
-#wsrep_slave_threads=1
-#innodb_flush_log_at_trx_commit=0
-
-# this is only for embedded server
-[embedded]
-
-# This group is only read by MariaDB servers, not by MySQL.
-# If you use the same .cnf file for MySQL and MariaDB,
-# you can put MariaDB-only options here
-[mariadb]
-
-# This group is only read by MariaDB-10.3 servers.
-# If you use the same .cnf file for MariaDB of different versions,
-# use this group for options that older servers don't understand
-[mariadb-10.3]
-EOF
-    break
-  elif [ $selection = "MySQL5.7" ]; then
+  if [ $selection = " MySQL5.7" ]; then
     # MySQL5.7のインストール
 
     #MariaDBを削除
@@ -531,6 +436,11 @@ start_message
 echo "centosユーザーを作成します"
 USERNAME='centos'
 PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
+#DBrootユーザーのパスワード
+RPASSWORD=$(more /dev/urandom  | tr -dc '12345678abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ,.+\-\!' | fold -w 12 | grep -i [12345678] | grep -i '[,.+\-\!]' | head -n 1)
+#DBuser(centos)パスワード
+UPASSWORD=$(more /dev/urandom  | tr -dc '12345678abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ,.+\-\!' | fold -w 12 | grep -i [12345678] | grep -i '[,.+\-\!]' | head -n 1)
+
 
 useradd -m -G apache -s /bin/bash "${USERNAME}"
 echo "${PASSWORD}" | passwd --stdin "${USERNAME}"
@@ -551,10 +461,64 @@ end_message
 echo "apacheを起動します"
 start_message
 systemctl start httpd.service
-
 echo "apacheのステータス確認"
 systemctl status httpd.service
+
+echo "MySQLの起動"
+echo ""
+systemctl start mysqld.service
+systemctl status mysqld.service
 end_message
+
+#自動起動の設定
+start_message
+systemctl enable httpd
+systemctl enable mysqld.service
+
+systemctl list-unit-files --type=service | grep httpd
+systemctl list-unit-files --type=service | grep mysqld
+end_message
+
+#パスワード設定
+start_message
+DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
+#sed -i -e "s|#password =|password = '${DB_PASSWORD}'|" /etc/my.cnf
+mysql -u root -p${DB_PASSWORD} --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${RPASSWORD}'; flush privileges;"
+echo ${RPASSWORD}
+
+cat <<EOF >/etc/createdb.sql
+CREATE DATABASE centos;
+CREATE USER 'centos'@'localhost' IDENTIFIED BY '${UPASSWORD}';
+GRANT ALL PRIVILEGES ON centos.* TO 'centos'@'localhost';
+FLUSH PRIVILEGES;
+SELECT user, host FROM mysql.user;
+EOF
+mysql -u root -p${RPASSWORD}  -e "source /etc/createdb.sql"
+
+end_message
+
+#ファイルを保存
+cat <<EOF >/etc/my.cnf.d/centos.cnf
+[client]
+user = centos
+password = ${UPASSWORD}
+host = localhost
+EOF
+
+systemctl restart mysqld.service
+
+#ファイルの保存
+start_message
+echo "パスワードなどを保存"
+cat <<EOF >/root/pass.txt
+ユーザー
+centos = ${PASSWORD}
+データベース
+root = ${RPASSWORD}
+centos = ${UPASSWORD}
+EOF
+end_message
+
 
 #自動起動の設定
 start_message
