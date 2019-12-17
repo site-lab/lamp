@@ -13,7 +13,7 @@ URL：https://www.logw.jp/
 ・apache2.4
 ・mod_sslのインストール
 ・PHP7系のインストール
-・MySQLのインストール
+・MariaDBのインストール
 ・centosユーザーの作成
 
 COMMENT
