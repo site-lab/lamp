@@ -24,9 +24,14 @@ LAMP環境を構築します。HTTP2対応バージョンもあります。
 * CPU：1コア
 * SSD：20GB
 
+### IDCFクラウド
+* メモリ：1GB
+* CPU：1コア
+* SSD：15GB
+
 ### 実行方法
 SFTPなどでアップロードをして、rootユーザーもしくはsudo権限で実行
-wgetを使用する場合は[環境構築スクリプトを公開してます](https://www.logw.jp/cloudserver/8886.html)を閲覧してください。
+wgetを使用する場合は[Buildree](https://buildree.com/)を閲覧してください。
 wgetがない場合は **yum -y install wget** でインストールしてください
 
 **sh ファイル名.sh** ←同じ階層にある場合
