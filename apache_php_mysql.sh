@@ -164,7 +164,7 @@ do
   fi
 done
 
-#PHPの選択
+#MySQLの選択
 PS4="インストールしたいMySQLのバージョンを選んでください > "
 ITEM_LIST="MySQL5.7 MySQL8.0"
 
