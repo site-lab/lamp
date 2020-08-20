@@ -70,18 +70,95 @@ if [ -e /etc/redhat-release ]; then
         echo ""
 
         start_message
-        yum -y update
+        #yum -y update
         end_message
 
         # apacheのインストール
         echo "apacheをインストールします"
         echo ""
 
-        start_message
-        yum -y install httpd
-        yum -y install openldap-devel expat-devel
-        yum -y install httpd-devel mod_ssl
+        PS3="インストールしたいPHPのバージョンを選んでください > "
+        ITEM_LIST="apache2.4.6 apache2.4.x"
 
+        select selection in $ITEM_LIST
+
+        do
+          if [ $selection = "apache2.4.6" ]; then
+            # apache2.4.6のインストール
+            echo "apache2.4.6をインストールします"
+            echo ""
+            start_message
+            yum -y install httpd
+            yum -y install openldap-devel expat-devel
+            yum -y install httpd-devel mod_ssl
+            end_message
+            break
+          elif [ $selection = "apache2.4.x" ]; then
+            # 2.4.ｘのインストール
+            #IUSリポジトリのインストール
+            start_message
+            echo "IUSリポジトリをインストールします"
+            yum -y install https://repo.ius.io/ius-release-el7.rpm
+            end_message
+
+            #IUSリポジトリをデフォルトから外す
+            start_message
+            echo "IUSリポジトリをデフォルトから外します"
+            cat >/etc/yum.repos.d/ius.repo <<'EOF'
+[ius]
+name = IUS for Enterprise Linux 7 - $basearch
+baseurl = https://repo.ius.io/7/$basearch/
+enabled = 1
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+
+[ius-debuginfo]
+name = IUS for Enterprise Linux 7 - $basearch - Debug
+baseurl = https://repo.ius.io/7/$basearch/debug/
+enabled = 0
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+
+[ius-source]
+name = IUS for Enterprise Linux 7 - Source
+baseurl = https://repo.ius.io/7/src/
+enabled = 0
+repo_gpgcheck = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+EOF
+            end_message
+
+            #Nghttp2のインストール
+            start_message
+            echo "Nghttp2のインストール"
+            yum --enablerepo=epel -y install nghttp2
+            end_message
+
+            #mailcapのインストール
+            start_message
+            echo "mailcapのインストール"
+            yum -y install mailcap
+            end_message
+
+
+            # apacheのインストール
+            echo "apacheをインストールします"
+            echo ""
+
+            start_message
+            yum -y --enablerepo=ius install httpd24u
+            yum -y install openldap-devel expat-devel
+            yum -y --enablerepo=ius install httpd24u-devel httpd24u-mod_ssl
+            break
+          else
+            echo "どちらかを選択してください"
+          fi
+        done
+
+        start_message
         echo "ファイルのバックアップ"
         echo ""
         cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
@@ -117,28 +194,16 @@ EOF
 
 #PHPの選択
 PS3="インストールしたいPHPのバージョンを選んでください > "
-ITEM_LIST="PHP7.2 PHP7.3 PHP7.4"
+ITEM_LIST="PHP7.3 PHP7.4"
 
 select selection in $ITEM_LIST
 do
-  if [ $selection = "PHP7.2" ]; then
-    # php7系のインストール
-    echo "php7.2をインストールします"
-    echo ""
-    start_message
-    yum -y install --enablerepo=remi,remi-php72 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
-    echo "phpのバージョン確認"
-    echo ""
-    php -v
-    echo ""
-    end_message
-    break
-  elif [ $selection = "PHP7.3" ]; then
+  if [ $selection = "PHP7.3" ]; then
     # php7系のインストール
     echo "php7.3をインストールします"
     echo ""
     start_message
-    yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
+    yum -y install --enablerepo=remi,remi-php73 php php-common php-pecl-zip php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
     echo "phpのバージョン確認"
     echo ""
     php -v
@@ -151,7 +216,7 @@ do
     echo "php7.4をインストールします"
     echo ""
     start_message
-    yum -y install --enablerepo=remi,remi-php74 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
+    yum -y install --enablerepo=remi,remi-php74 php php-common php-pecl-zip php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
     echo "phpのバージョン確認"
     echo ""
     php -v
