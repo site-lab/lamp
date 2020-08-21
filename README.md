@@ -49,43 +49,18 @@ wgetがない場合は **yum -y install wget** でインストールしてくだ
 * スロークエリ有効化
 
 ## [apache_php_mariadb.sh](https://github.com/site-lab/lamp/blob/master/apache_php_mariadb.sh)
-Apache2.4.6+PHP7.x+MariaDB10.3をインストールします。
+Apache2.4系+PHP7.x+MariaDB10系をインストールします。
 
-PHPのバージョンは7.2～7.4まで選択となります
+PHPのバージョンは7.3～7.4まで選択となります
 PHP7は **モジュール版** となります
+
+Apache、PHP、MariaDBを選択してインストールします
 
 ## [apache_php_mysql.sh](https://github.com/site-lab/lamp/blob/master/apache_php_mysql.sh)
-Apache2.4.6+PHP7.x+MySQLをインストールします。
+Apache2.4系+PHP7.x+MySQLをインストールします。
 
-PHPのバージョンは7.2～7.4まで選択となります。
-MySQLは5.7か8を選択します
+PHPのバージョンは7.3～7.4まで選択となります。
+Apache、PHP、MariaDBを選択してインストールします
 有効機能
 * デフォルトパスワード有効期限無効
 * PHP7は **モジュール版** となります
-
-## [apache24u_php_mariadb.sh](https://github.com/site-lab/lamp/blob/master/apache24u_php_mariadb.sh)
-Apache2.4.x+PHP7.x+MariaDB10.3をインストールします。
-
-PHPのバージョンは7.2～7.4まで選択となります
-PHP7は **モジュール版** となります
-
-## [apache24u_php_mysql.sh](https://github.com/site-lab/lamp/blob/master/apache24u_php_mysql.sh)
-Apache2.4.x+PHP7.x+MySQLをインストールします。
-
-PHPのバージョンは7.2～7.4まで選択となります。
-MySQLは5.7か8を選択します
-有効機能
-* デフォルトパスワード有効期限無効
-* PHP7は **モジュール版** となります
-
-## [apache_php72_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php72_fcgid_mariadb103.sh)
-Apache2.4+PHP7.2+MariaDB10.3をインストールします。
-PHP7は **FastCGI版** となります。
-
-## [apache_php73_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php73_fcgid_mariadb103.sh)
-Apache2.4+PHP7.3+MariaDB10.3をインストールします。
-PHP7は **FastCGI版** となります。
-
-## [apache_php74_fcgid_mariadb103.sh](https://github.com/site-lab/lamp/blob/master/apache_php74_fcgid_mariadb103.sh)
-Apache2.4+PHP7.4+MariaDB10.3をインストールします。
-PHP7は **FastCGI版** となります。
