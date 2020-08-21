@@ -222,9 +222,16 @@ done
 
   ls /etc/httpd/conf/
   #mariaDBのインストール
-  start_message
-  echo "MariaDB10.3系をインストールします"
-cat >/etc/yum.repos.d/MariaDB.repo <<'EOF'
+  PS3="インストールしたいMariaDBのバージョンを選んでください > "
+  ITEM_LIST="MariaDB10.3 MariaDB10.4 MariaDB10.5"
+
+  select selection in $ITEM_LIST
+  do
+    if [ $selection = "MariaDB10.3" ]; then
+      #mariaDBのインストール
+      start_message
+      echo "MariaDB10.3系をインストールします"
+      cat >/etc/yum.repos.d/MariaDB.repo <<'EOF'
 # MariaDB 10.3 CentOS repository list
 # http://mariadb.org/mariadb/repositories/
 [mariadb]
@@ -234,16 +241,15 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
 
-  yum -y install mariadb-server maradb-client
-  yum list installed | grep mariadb
+      yum -y install mariadb-server maradb-client
+      yum list installed | grep mariadb
 
-  end_message
+      end_message
 
-  #ディレクトリとファイル作成
-  start_message
-  mkdir /var/log/mysql/
-  rm -rf /etc/my.cnf.d/server.cnf
-cat >/etc/my.cnf.d/server.cnf <<'EOF'
+      #ファイル作成
+      start_message
+      rm -rf /etc/my.cnf.d/server.cnf
+      cat >/etc/my.cnf.d/server.cnf <<'EOF'
 #
 # These groups are read by MariaDB server.
 # Use it for options that only the server (but not clients) should see
@@ -308,6 +314,190 @@ character-set-server = utf8
 # use this group for options that older servers don't understand
 [mariadb-10.3]
 EOF
+      break
+
+    elif [ $selection = "MariaDB10.4" ]; then
+      #mariaDBのインストール
+      start_message
+      echo "MariaDB10.4系をインストールします"
+      cat >/etc/yum.repos.d/MariaDB.repo <<'EOF'
+# MariaDB 10.4 CentOS repository list
+# http://mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+
+      yum -y install mariadb-server maradb-client
+      yum list installed | grep mariadb
+
+      end_message
+
+      #ファイル作成
+      start_message
+      rm -rf /etc/my.cnf.d/server.cnf
+      cat >/etc/my.cnf.d/server.cnf <<'EOF'
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+[mysqld]
+
+#
+# * Galera-related settings
+#
+
+#エラーログ
+log_error="/var/log/mysql/mysqld.log"
+log_warnings=1
+
+#  Query log
+general_log = ON
+general_log_file="/var/log/mysql/sql.log"
+
+#  Slow Query log
+slow_query_log=1
+slow_query_log_file="/var/log/mysql/slow.log"
+log_queries_not_using_indexes
+log_slow_admin_statements
+long_query_time=5
+character-set-server = utf8
+
+
+[galera]
+# Mandatory settings
+#wsrep_on=ON
+#wsrep_provider=
+#wsrep_cluster_address=
+#binlog_format=row
+#default_storage_engine=InnoDB
+#innodb_autoinc_lock_mode=2
+#
+# Allow server to accept connections on all interfaces.
+#
+#bind-address=0.0.0.0
+#
+# Optional setting
+#wsrep_slave_threads=1
+#innodb_flush_log_at_trx_commit=0
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+[mariadb]
+
+# This group is only read by MariaDB-10.3 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.3]
+EOF
+      break
+
+    elif [ $selection = "MariaDB10.5" ]; then
+      #mariaDBのインストール
+      start_message
+      echo "MariaDB10.5系をインストールします"
+      cat >/etc/yum.repos.d/MariaDB.repo <<'EOF'
+# MariaDB 10.5 CentOS repository list
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.5/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+
+      yum -y install mariadb-server maradb-client
+      yum list installed | grep mariadb
+
+      end_message
+
+      #ファイル作成
+      start_message
+      rm -rf /etc/my.cnf.d/server.cnf
+      cat >/etc/my.cnf.d/server.cnf <<'EOF'
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+[mysqld]
+
+#
+# * Galera-related settings
+#
+
+#エラーログ
+log_error="/var/log/mysql/mysqld.log"
+log_warnings=1
+
+#  Query log
+general_log = ON
+general_log_file="/var/log/mysql/sql.log"
+
+#  Slow Query log
+slow_query_log=1
+slow_query_log_file="/var/log/mysql/slow.log"
+log_queries_not_using_indexes
+log_slow_admin_statements
+long_query_time=5
+character-set-server = utf8
+
+
+[galera]
+# Mandatory settings
+#wsrep_on=ON
+#wsrep_provider=
+#wsrep_cluster_address=
+#binlog_format=row
+#default_storage_engine=InnoDB
+#innodb_autoinc_lock_mode=2
+#
+# Allow server to accept connections on all interfaces.
+#
+#bind-address=0.0.0.0
+#
+# Optional setting
+#wsrep_slave_threads=1
+#innodb_flush_log_at_trx_commit=0
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+[mariadb]
+
+# This group is only read by MariaDB-10.3 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.5]
+EOF
+      break
+
+    else
+      echo "どれかを選択してください"
+    fi
+  done
 
         #phpmyadminのファイル修正
         cat >/etc/httpd/conf.d/phpMyAdmin.conf <<'EOF'
@@ -451,10 +641,10 @@ EOF
 
         #パスワード設定
         start_message
-        DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
+        #DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
         #sed -i -e "s|#password =|password = '${DB_PASSWORD}'|" /etc/my.cnf
-        mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${RPASSWORD}'; flush privileges;"
-        echo ${RPASSWORD}
+        #mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${RPASSWORD}'; flush privileges;"
+        #echo ${RPASSWORD}
 
 cat <<EOF >/etc/createdb.sql
 CREATE DATABASE centos;

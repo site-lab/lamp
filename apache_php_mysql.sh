@@ -70,7 +70,7 @@ if [ -e /etc/redhat-release ]; then
         echo ""
 
         start_message
-        #yum -y update
+        yum -y update
         end_message
 
         # apacheのインストール
