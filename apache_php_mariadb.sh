@@ -9,7 +9,7 @@ URL：https://buildree.com/
 
 注意点：conohaのポートは全て許可前提となります。もしくは80番、443番の許可をしておいてください。システムのfirewallはオン状態となります。centosユーザーのパスワードはランダム生成となります。最後に表示されます
 
-目的：システム更新+apache2.4.6+php7+MySQLのインストール
+目的：システム更新+apache2.4系+php7+MariaDBのインストール
 ・apache2.4
 ・mod_sslのインストール
 ・PHP7系のインストール
