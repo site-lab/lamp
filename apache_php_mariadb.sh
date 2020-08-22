@@ -641,10 +641,6 @@ EOF
 
         #パスワード設定
         start_message
-        #DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
-        #sed -i -e "s|#password =|password = '${DB_PASSWORD}'|" /etc/my.cnf
-        #mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${RPASSWORD}'; flush privileges;"
-        #echo ${RPASSWORD}
 
 cat <<EOF >/etc/createdb.sql
 CREATE DATABASE centos;
