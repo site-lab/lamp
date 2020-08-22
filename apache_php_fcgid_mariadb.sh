@@ -194,28 +194,16 @@ EOF
 
 #PHPの選択
 PS3="インストールしたいPHPのバージョンを選んでください > "
-ITEM_LIST="PHP7.2 PHP7.3 PHP7.4"
+ITEM_LIST="PHP7.3 PHP7.4"
 
 select selection in $ITEM_LIST
 do
-  if [ $selection = "PHP7.2" ]; then
-    # php7系のインストール
-    echo "php7.2をインストールします"
-    echo ""
-    start_message
-    yum -y install --enablerepo=remi,remi-php72 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql
-    echo "phpのバージョン確認"
-    echo ""
-    php -v
-    echo ""
-    end_message
-    break
-  elif [ $selection = "PHP7.3" ]; then
+  if [ $selection = "PHP7.3" ]; then
     # php7系のインストール
     echo "php7.3をインストールします"
     echo ""
     start_message
-    yum -y install --enablerepo=remi,remi-php73 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql
+    yum -y install --enablerepo=remi,remi-php73 php php-common php-pecl-zip php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
     echo "phpのバージョン確認"
     echo ""
     php -v
@@ -228,7 +216,7 @@ do
     echo "php7.4をインストールします"
     echo ""
     start_message
-    yum -y install --enablerepo=remi,remi-php74 php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql
+    yum -y install --enablerepo=remi,remi-php74 php php-common php-pecl-zip php-mbstring php-xml php-xmlrpc php-gd php-pdo php-pecl-mcrypt php-mysqlnd php-pecl-mysql phpmyadmin
     echo "phpのバージョン確認"
     echo ""
     php -v
