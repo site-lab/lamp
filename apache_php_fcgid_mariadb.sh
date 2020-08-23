@@ -55,10 +55,6 @@ if [ -e /etc/redhat-release ]; then
         yum -y install git
         end_message
 
-        #mod_fcgidのインストール
-        start_message
-        yum -y install mod_fcgid
-        end_message
 
         # yum updateを実行
         echo "yum updateを実行します"
@@ -228,6 +224,12 @@ do
     echo "どれかを選択してください"
   fi
 done
+
+#mod_fcgidのインストール
+start_message
+yum -y install mod_fcgid
+end_message
+
 
 #デフォルトのファイルを無効
 start_message
