@@ -531,8 +531,17 @@ EOF
   Alias /phpMyAdmin /usr/share/phpMyAdmin
   Alias /phpmyadmin /usr/share/phpMyAdmin
 
+  #PHPを優先にする
+  <IfModule dir_module>
+      DirectoryIndex index.php
+  </IfModule>
+
   <Directory /usr/share/phpMyAdmin/>
      AddDefaultCharset UTF-8
+     #fast_cgiの許可
+     Options FollowSymLinks ExecCGI
+     AddHandler fcgid-script .php
+     FCGIWrapper /usr/bin/php-cgi .php
 
      <IfModule mod_authz_core.c>
        # Apache 2.4
