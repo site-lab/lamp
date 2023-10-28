@@ -161,7 +161,7 @@ EOF
         #ユーザー作成
         start_message
         echo "ユーザーを作成します"
-        USERNAME=$(more /dev/urandom  | tr -d -c '[:a-z:]' | fold -w 6 | head -1)
+        USERNAME='unicorn'
         PASSWORD=$(more /dev/urandom  | tr -d -c '[:alnum:]' | fold -w 10 | head -1)
 
         useradd -m -G apache -s /bin/bash "${USERNAME}"
@@ -182,7 +182,7 @@ EOF
 
         #所有者の変更
         start_message
-        echo "ドキュメントルートの所有者、グループを変更します"
+        echo "ドキュメントルートの所有者をunicorn、グループをapacheにします"
         chown -R "${USERNAME}":apache /var/www/html
         end_message
 
