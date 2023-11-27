@@ -63,6 +63,41 @@ fi
         dnf -y install git
         end_message
 
+
+        # dnf updateを実行
+        echo "dnf updateを実行します"
+        echo ""
+
+        start_message
+        dnf -y update
+        end_message
+
+        # apacheのインストール
+        echo "apacheをインストールします"
+        dnf  install -y httpd mod_ssl
+
+
+
+        ls /etc/httpd/conf/
+        echo "Apacheのバージョン確認"
+        echo ""
+        httpd -v
+        echo ""
+        end_message
+
+        #gzip圧縮の設定
+        cat >/etc/httpd/conf.d/gzip.conf <<'EOF'
+SetOutputFilter DEFLATE
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI\.(?:gif|jpe?g|png)$ no-gzip dont-vary
+Header append Vary User-Agent env=!dont-var
+EOF
+
+        
+
+
         start_message
         if [ $DIST_VER = "8" ];then
         
@@ -116,41 +151,6 @@ cat /var/www/html/info.php
 end_message
 
 
-
-        # dnf updateを実行
-        echo "dnf updateを実行します"
-        echo ""
-
-        start_message
-        #dnf -y update
-        end_message
-
-        # apacheのインストール
-        echo "apacheをインストールします"
-        dnf  install -y httpd mod_ssl
-
-
-
-        ls /etc/httpd/conf/
-        echo "Apacheのバージョン確認"
-        echo ""
-        httpd -v
-        echo ""
-        end_message
-
-        #gzip圧縮の設定
-        cat >/etc/httpd/conf.d/gzip.conf <<'EOF'
-SetOutputFilter DEFLATE
-BrowserMatch ^Mozilla/4 gzip-only-text/html
-BrowserMatch ^Mozilla/4\.0[678] no-gzip
-BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
-SetEnvIfNoCase Request_URI\.(?:gif|jpe?g|png)$ no-gzip dont-vary
-Header append Vary User-Agent env=!dont-var
-EOF
-
-        
-
-
         #データベースの作成
         start_message
         echo "データベースをインストールします"
@@ -198,8 +198,6 @@ EOF
         start_message
         systemctl enable httpd
         systemctl enable mysqld
-        systemctl list-unit-files --type=service | grep httpd
-        systemctl list-unit-files --type=service | grep mysqld
         end_message
 
 
@@ -272,9 +270,13 @@ EOF
         ドキュメントルートの所有者：unicorn
         グループ：apache
         になっているため、ユーザー名とグループの変更が必要な場合は変更してください
+
+        mysql --defaults-extra-file=/etc/my.cnf.d/unicorn.cnf
+
+        にて作成したunicornユーザーでunicornという名のデータベースへログインできます
 EOF
 
-        echo "userユーザーのパスワードは"${PASSWORD}"です。"
+        echo ${USERNAME}"ユーザーのパスワードは"${PASSWORD}"です。"
       else
         echo "RedHat系ではないため、このスクリプトは使えません。このスクリプトのインストール対象はRedHat8，9系です。"
       fi
